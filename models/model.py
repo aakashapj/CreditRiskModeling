@@ -7,10 +7,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 df_model = pd.read_csv(
-    'A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\processed\\df_encoded.csv')
+    'A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\processed\\df_encoded_V1_0.csv')
 
 ''' X and Y Dataset Creation '''
-X_Dataset = df_model.drop(columns=['Approved_Flag'], axis=1)
+X_Dataset = df_model.drop(['Approved_Flag'], axis=1)
 Y_Dataset = df_model['Approved_Flag']
 '''---------------------------------------------'''
 
@@ -19,7 +19,10 @@ Y_Dataset = df_model['Approved_Flag']
 x_train, x_test, y_train, y_test = train_test_split(X_Dataset, Y_Dataset, test_size=0.2, random_state=42)
 '''---------------------------------------------'''
 
-''' Random Forest Classifier '''
+X_Dataset.columns.duplicated()
+
+
+'''  Random Forest Classifier '''
 # Model Fitting Using Random Forest Classifier
 rf_Classifier = RandomForestClassifier(n_estimators=200, random_state=42)
 rf_Classifier.fit(x_train, y_train)
@@ -28,7 +31,7 @@ rf_Classifier.fit(x_train, y_train)
 y_pred = rf_Classifier.predict(x_test)
 
 # checking prediction Metrics
-accuracy = accuracy_score(y_pred, y_test)
+accuracy = accuracy_score(y_test, y_pred)
 print(f'Model Accuracy: {accuracy}')
 print()
 precision, recall, fscore, _ = precision_recall_fscore_support(y_pred, y_test)
@@ -40,7 +43,7 @@ for i, v in enumerate(['P1', 'P2', 'P3', 'P4']):
     print(f'F-score: {fscore[i]}')
     print()
 
-# Random Forest Accuracy -> 0.99025
+# Random Forest Accuracy -> 0.76500
 '''------------------------------------------------'''
 
 ''' XGBoost Classifier '''
@@ -70,5 +73,31 @@ for i, v in enumerate(['P1', 'P2', 'P3', 'P4']):
     print(f'F-score: {fscore[i]}')
     print()
 
+# XGBoost Accuracy -> 0.7733
+'''------------------------------------------------'''
 
+''' Decision Tree Classifier '''
+
+# Model Fitting Using XGBoost Classifier
+DecisionTreeModel = DecisionTreeClassifier(max_depth=20, min_samples_split=10)
+DecisionTreeModel.fit(x_train, y_train)
+
+# Model Prediction
+y_pred = DecisionTreeModel.predict(x_test)
+
+# Checking Model Prediction
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Model Accuracy: {accuracy}')
+print()
+
+precision, recall, fscore, _ = precision_recall_fscore_support(y_test, y_pred)
+
+for i, v in enumerate(['P1', 'P2', 'P3', 'P4']):
+    print(f'Class {v}:')
+    print(f'Precision: {precision[i]}')
+    print(f'Recall: {recall[i]}')
+    print(f'F-Score: {fscore[i]}')
+    print()
+
+# Decision Tree Classifier Accuracy -> 0.7100
 '''------------------------------------------------'''
