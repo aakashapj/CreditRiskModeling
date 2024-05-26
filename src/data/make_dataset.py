@@ -35,7 +35,7 @@ def main():
     # Merging 2 data sets
     df = pd.merge(df1, df2, how='inner', left_on=['PROSPECTID'], right_on=['PROSPECTID'])
 
-    df.to_csv("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\raw\\df_merged.csv",
+    df.to_csv("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\raw\\df_merged_v1_0.csv",
               index=False)
 
 

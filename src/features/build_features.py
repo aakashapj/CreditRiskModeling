@@ -3,7 +3,7 @@ from scipy.stats import chi2_contingency, f_oneway
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.preprocessing import LabelEncoder
 
-df = pd.read_csv('A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\raw\\df_merged.csv')
+df = pd.read_csv('A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\raw\\df_merged_v1_0.csv')
 
 
 # Analysis on Categorical Data Columns
@@ -65,16 +65,26 @@ for i in Num_accepted_columns:
         Num_columns_Final.append(i)
 
 
+features = Num_columns_Final + accepted_columns + ["Approved_Flag"]
+df_features = df[features]
+
+
 # Categorical Columns Encoding
-# Label Encoding of Ordinal data -> Education Column
-labelEncoder = LabelEncoder()
-df['EDUCATION'] = labelEncoder.fit_transform(df['EDUCATION'])
-df['EDUCATION'].value_counts()
+df_features.loc[df['EDUCATION'] == 'PROFESSIONAL', ['EDUCATION']] = 6
+df_features.loc[df['EDUCATION'] == 'POST-GRADUATE', ['EDUCATION']] = 5
+df_features.loc[df['EDUCATION'] == 'GRADUATE', ['EDUCATION']] = 4
+df_features.loc[df['EDUCATION'] == 'UNDER GRADUATE', ['EDUCATION']] = 3
+df_features.loc[df['EDUCATION'] == '12TH', ['EDUCATION']] = 2
+df_features.loc[df['EDUCATION'] == 'SSC', ['EDUCATION']] = 1
+df_features.loc[df['EDUCATION'] == 'OTHERS', ['EDUCATION']] = 0
+
+df_features['EDUCATION'] = df_features['EDUCATION'].astype(int)
+
+df_features.info()
 
 # One-Hot Encoding of Nominal Data -> Marital Status, Gender, Last_prod_enq2, First_prod_enq2
 ObjectColumnEncode = [value for value in ObjectColumn if (value != 'Approved_Flag' and value != 'EDUCATION')]
-df_Encoded = pd.get_dummies(df, columns=ObjectColumnEncode)
+df_Encoded = pd.get_dummies(df_features, columns=ObjectColumnEncode)
 
 # Transferring Processed DataFrame to Processed Data Folder
-df_Encoded.to_csv("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\processed\\df_encoded.csv", index=False)
-df_Encoded.to_csv("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\processed\\df_encoded2.csv", index=False)
+df_Encoded.to_csv("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\data\\processed\\df_encoded_V1_0.csv", index=False)
