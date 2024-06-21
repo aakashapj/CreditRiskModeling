@@ -1,13 +1,18 @@
 import streamlit as st
 import pickle
 import numpy as np
+import os
+
+sys_cwd = os.getcwd()
+
+os.chdir(sys_cwd + "\\deployment")
 
 # Page Configuration
 st.set_page_config(layout='wide')
 
 
 # Model load from pickle file
-modelFile = open("A:\\Practice_Project\\MachineLearningPractice\\CreditRiskModeling\\deployment\\crmodel.sav", 'rb')
+modelFile = open(os.getcwd() + "\\crmodel.sav", 'rb')
 model = pickle.load(modelFile)
 # -----------------------------------------------
 
